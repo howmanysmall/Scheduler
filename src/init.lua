@@ -145,14 +145,21 @@ function Scheduler.AddItem(Object, Lifetime)
 		if tick() >= ExecuteTime then
 			Connection:Disconnect()
 			if Object then
-				if Object.Destroy then
+				local TypeOf = typeof(Object)
+				if TypeOf == "Instance" then
 					pcall(Object.Destroy, Object)
-				elseif Object.destroy then
-					pcall(Object.destroy, Object)
-				elseif Object.Disconnect then
+				elseif TypeOf == "RBXScriptConnection" then
 					pcall(Object.Disconnect, Object)
-				elseif Object.disconnect then
-					pcall(Object.disconnect, Object)
+				else
+					if Object.Destroy then
+						pcall(Object.Destroy, Object)
+					elseif Object.destroy then
+						pcall(Object.destroy, Object)
+					elseif Object.Disconnect then
+						pcall(Object.Disconnect, Object)
+					elseif Object.disconnect then
+						pcall(Object.disconnect, Object)
+					end
 				end
 			end
 		end
