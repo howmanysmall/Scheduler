@@ -77,16 +77,12 @@ function Scheduler.Delay(DelayTime, Function, ...)
 end
 
 -- @source https://devforum.roblox.com/t/psa-you-can-get-errors-and-stack-traces-from-coroutines/455510/2
-local function Call(Function, ...)
-	return Function(...)
-end
-
 local function Finish(Thread, Success, ...)
 	if not Success then
 		warn(debug.traceback(Thread, "Something went wrong! " .. tostring((...))))
 	end
 
-	return Thread, Success, ...
+	return Success, ...
 end
 
 --[[**
@@ -98,8 +94,8 @@ end
 **--]]
 function Scheduler.Spawn(Function, ...)
 	assert(t.callback(Function))
-	local Thread = coroutine.create(Call)
-	return Finish(Thread, coroutine.resume(Thread, Function, ...))
+	local Thread = coroutine.create(Function)
+	return Finish(Thread, coroutine.resume(Thread, ...))
 end
 
 --[[**
