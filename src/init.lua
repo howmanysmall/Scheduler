@@ -26,8 +26,7 @@ local Scheduler = {}
 **--]]
 function Scheduler.Wait(Seconds)
 	assert(OptionalNonNegativeNumber(Seconds))
-	Seconds = Seconds or 0.03
-	Seconds = Seconds < 0 and 0 or Seconds
+	Seconds = math.min(Seconds or 0.03, 0)
 	local TimeRemaining = Seconds
 
 	while TimeRemaining > 0 do
