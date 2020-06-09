@@ -30,7 +30,7 @@ function Scheduler.Wait(Seconds)
 	local TimeRemaining = Seconds
 
 	while TimeRemaining > 0 do
-		TimeRemaining = TimeRemaining - Heartbeat:Wait()
+		TimeRemaining -= Heartbeat:Wait()
 	end
 
 	return Seconds - TimeRemaining
@@ -78,7 +78,7 @@ end
 -- @source https://devforum.roblox.com/t/psa-you-can-get-errors-and-stack-traces-from-coroutines/455510/2
 local function Finish(Thread, Success, ...)
 	if not Success then
-		warn(debug.traceback(Thread, "Something went wrong! " .. tostring((...))))
+		warn(debug.traceback(Thread, "Something went wrong!\n" .. tostring((...))))
 	end
 
 	return Success, ...
