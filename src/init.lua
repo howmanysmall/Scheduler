@@ -42,7 +42,7 @@ end
 	@param [t:numberMin<0>] DelayTime The amount of time before the function will be executed.
 	@param [t:callback] Function The function you are executing.
 	@param [variant] ... The optional arguments you can pass that the function will execute with.
-	@returns [void]
+	@returns [t:RBXScriptConnection] The connection that can be disconnected if you wish to cancel execution.
 **--]]
 function Scheduler.Delay(DelayTime, Function, ...)
 	assert(DelayTuple(DelayTime, Function))
@@ -89,7 +89,7 @@ end
 
 	@param [t:callback] Function The function you are executing.
 	@param [variant] ... The optional arguments you can pass that the function will execute with.
-	@returns [void]
+	@returns [t:tuple<t:boolean, t:any>] Whether or not the execution was successful, and whatever the function might've returned with (error message, return values, etc).
 **--]]
 function Scheduler.Spawn(Function, ...)
 	assert(t.callback(Function))
@@ -105,6 +105,7 @@ end
 	@returns [void]
 **--]]
 function Scheduler.SpawnDelayed(Function, ...)
+	assert(t.callback(Function))
 	local Length = select("#", ...)
 	if Length > 0 then
 		local Arguments = {...}
@@ -129,7 +130,7 @@ end
 
 	@param [t:union<t:Instance, t:table, t:RBXScriptConnection, t:userdata>] Object The object to be added to destroy scheduler.
 	@param [t:optional<t:numberMin<0>>] Lifetime The number of seconds before the object should be destroyed. Defaults to 10.
-	@returns [void]
+	@returns [t:RBXScriptConnection] The connection that can be disconnected if you wish to cancel execution.
 **--]]
 function Scheduler.AddItem(Object, Lifetime)
 	assert(AddItemTuple(Object, Lifetime))
