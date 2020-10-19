@@ -2,7 +2,6 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Resources = require(ReplicatedStorage.Resources)
-local Table = Resources:LoadLibrary("Table")
 local t = Resources:LoadLibrary("t")
 
 local Heartbeat = RunService.Heartbeat
@@ -49,24 +48,24 @@ function Scheduler.Delay(DelayTime, Function, ...)
 	local Length = select("#", ...)
 	if Length > 0 then
 		local Arguments = {...}
-		local ExecuteTime = tick() + DelayTime
+		local ExecuteTime = time() + DelayTime
 		local Connection
 
 		Connection = Heartbeat:Connect(function()
-			if tick() >= ExecuteTime then
-				Connection:Disconnect()
+			if time() >= ExecuteTime then
+				Connection = Connection:Disconnect()
 				Function(table.unpack(Arguments, 1, Length))
 			end
 		end)
 
 		return Connection
 	else
-		local ExecuteTime = tick() + DelayTime
+		local ExecuteTime = time() + DelayTime
 		local Connection
 
 		Connection = Heartbeat:Connect(function()
-			if tick() >= ExecuteTime then
-				Connection:Disconnect()
+			if time() >= ExecuteTime then
+				Connection = Connection:Disconnect()
 				Function()
 			end
 		end)
@@ -112,14 +111,14 @@ function Scheduler.SpawnDelayed(Function, ...)
 		local Connection
 
 		Connection = Heartbeat:Connect(function()
-			Connection:Disconnect()
+			Connection = Connection:Disconnect()
 			Function(table.unpack(Arguments, 1, Length))
 		end)
 	else
 		local Connection
 
 		Connection = Heartbeat:Connect(function()
-			Connection:Disconnect()
+			Connection = Connection:Disconnect()
 			Function()
 		end)
 	end
@@ -134,12 +133,12 @@ end
 **--]]
 function Scheduler.AddItem(Object, Lifetime)
 	assert(AddItemTuple(Object, Lifetime))
-	local ExecuteTime = tick() + (Lifetime or 10)
+	local ExecuteTime = time() + (Lifetime or 10)
 	local Connection
 
 	Connection = Heartbeat:Connect(function()
-		if tick() >= ExecuteTime then
-			Connection:Disconnect()
+		if time() >= ExecuteTime then
+			Connection = Connection:Disconnect()
 			if Object then
 				local TypeOf = typeof(Object)
 				if TypeOf == "Instance" then
@@ -164,4 +163,4 @@ function Scheduler.AddItem(Object, Lifetime)
 	return Connection
 end
 
-return Table.Lock(Scheduler)
+return Scheduler
